@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鮨青山 - Marketing Data Entry</title>
+<style>
+  :root {
+    --primary: #1a3a4a;
+    --primary-light: #2a5a6a;
+    --accent: #c4956a;
+    --accent-light: #e8c9a8;
+    --bg: #f5f0eb;
+    --card: #ffffff;
+    --text: #1a1a1a;
+    --text-light: #666;
+    --border: #ddd;
+    --success: #4caf50;
+    --danger: #e74c3c;
+    --warning: #f39c12;
+    --radius: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .header-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+  .lang-toggle {
+    display: flex;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .lang-btn {
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .lang-btn.active {
+    background: rgba(255,255,255,0.25);
+    color: white;
+  }
+
+  /* Main Layout */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .icon { font-size: 18px; }
+
+  /* Form Grid */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .form-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .form-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-light);
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    background: white;
+    -webkit-appearance: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .form-group textarea { resize: vertical; min-height: 40px; }
+  .form-group select { cursor: pointer; }
+
+  /* Guest Cards */
+  .guest-card {
+    background: #fafafa;
+    border: 1.5px solid #eee;
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .guest-card:hover { border-color: var(--accent-light); }
+  .guest-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .guest-number {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--accent-light);
+    padding: 3px 10px;
+    border-radius: 12px;
+  }
+  .btn-remove-guest {
+    background: none;
+    border: none;
+    color: var(--danger);
+    cursor: pointer;
+    font-size: 20px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    line-height: 1;
+  }
+  .btn-remove-guest:hover { background: rgba(231,76,60,0.1); }
+
+  /* Buttons */
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--primary-light); }
+  .btn-accent {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-accent:hover { opacity: 0.9; }
+  .btn-outline {
+    background: white;
+    color: var(--primary);
+    border: 1.5px solid var(--primary);
+  }
+  .btn-outline:hover { background: var(--primary); color: white; }
+  .btn-success {
+    background: var(--success);
+    color: white;
+    font-size: 16px;
+    padding: 14px 32px;
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-success:hover { opacity: 0.9; }
+  .btn-success:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+  .btn-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* Chip Select (for source) */
+  .chip-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    padding: 6px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    user-select: none;
+  }
+  .chip:hover { border-color: var(--accent); }
+  .chip.selected {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+
+  /* Nationality Grid */
+  .nat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+    gap: 4px;
+  }
+  .nat-chip {
+    padding: 6px 2px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    user-select: none;
+  }
+  .nat-chip:hover { border-color: var(--accent); }
+  .nat-chip.selected {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .nat-chip .flag { font-size: 16px; display: block; }
+  .nat-chip .code { font-size: 10px; font-weight: 600; }
+
+  /* Menu Grid */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 6px;
+  }
+  .menu-chip {
+    padding: 8px 6px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    user-select: none;
+  }
+  .menu-chip:hover { border-color: var(--accent); }
+  .menu-chip.selected {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .menu-chip .name { font-size: 13px; font-weight: 600; display: block; }
+  .menu-chip .price { font-size: 10px; color: var(--text-light); display: block; margin-top: 2px; }
+  .menu-chip.selected .price { color: rgba(255,255,255,0.8); }
+
+  /* Toggle */
+  .toggle-group {
+    display: flex;
+    gap: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1.5px solid var(--border);
+  }
+  .toggle-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    background: white;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .toggle-btn.active-yes { background: var(--success); color: white; }
+  .toggle-btn.active-no { background: var(--danger); color: white; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--primary);
+    color: white;
+    padding: 14px 28px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 200;
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.error { background: var(--danger); }
+  .toast.success { background: var(--success); }
+
+  /* Settings Panel */
+  .settings-panel {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 150;
+    justify-content: center;
+    align-items: center;
+  }
+  .settings-panel.show { display: flex; }
+  .settings-content {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .settings-content h2 { margin-bottom: 16px; font-size: 18px; color: var(--primary); }
+
+  /* History */
+  .history-item {
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .history-item .time { color: var(--text-light); font-size: 12px; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+    .form-grid.cols-4 { grid-template-columns: 1fr 1fr; }
+    .container { padding: 10px; }
+    .card { padding: 14px; }
+    .menu-grid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); }
+  }
+
+  /* Spinner */
+  .spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Quick entry counter */
+  .visit-counter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .visit-counter button {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .visit-counter button:hover { border-color: var(--accent); background: var(--accent-light); }
+  .visit-counter .count {
+    font-size: 18px;
+    font-weight: 600;
+    min-width: 30px;
+    text-align: center;
+  }
+
+  /* Five Stars */
+  .star-toggle {
+    padding: 8px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .star-toggle.active {
+    background: var(--warning);
+    color: white;
+    border-color: var(--warning);
+  }
+
+  .section-divider {
+    height: 1px;
+    background: #eee;
+    margin: 12px 0;
+  }
+
+  /* Settings button */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .icon-btn {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: background 0.2s;
+  }
+  .icon-btn:hover { background: rgba(255,255,255,0.25); }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div>
+    <h1 id="appTitle">鮨青山</h1>
+    <div class="header-sub" id="appSubtitle">マーケティングデータ入力</div>
+  </div>
+  <div class="header-actions">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('ja')">日本語</button>
+      <button class="lang-btn" onclick="setLang('vi')">Tiếng Việt</button>
+    </div>
+    <button class="icon-btn" onclick="toggleSettings()" title="Settings">⚙</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Settings Modal -->
+<div class="settings-panel" id="settingsPanel">
+  <div class="settings-content">
+    <h2 id="settingsTitle">Google Sheets 設定</h2>
+    <div class="form-group" style="margin-bottom:16px">
+      <label id="lblScriptUrl">Google Apps Script Web App URL</label>
+      <input type="url" id="scriptUrl" placeholder="https://script.google.com/macros/s/..." style="font-size:13px">
+      <p style="font-size:11px;color:var(--text-light);margin-top:4px" id="settingsHint">
+        Google Sheetsにデータを送信するためのURLを設定してください
+      </p>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label id="lblSheetId">Spreadsheet ID</label>
+      <input type="text" id="sheetId" value="1Vr17Rmok8U0FE-GqCd6v54DVegb7wd8asWlHBDQ5ezQ" style="font-size:13px">
+    </div>
+    <div class="btn-group" style="justify-content:flex-end">
+      <button class="btn btn-accent btn-sm" onclick="testConnection()" id="btnTestConn">接続テスト</button>
+      <button class="btn btn-outline" onclick="toggleSettings()" id="btnSettingsCancel">キャンセル</button>
+      <button class="btn btn-primary" onclick="saveSettings()" id="btnSettingsSave">保存</button>
+    </div>
+    <div id="testResult" style="margin-top:12px;font-size:13px;display:none"></div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+
+  <!-- Group Info Card -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📋</span> <span data-i18n="groupInfo">グループ情報</span></div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label data-i18n="date">日付</label>
+        <input type="date" id="groupDate">
+      </div>
+      <div class="form-group">
+        <label data-i18n="time">時間</label>
+        <input type="time" id="groupTime">
+      </div>
+      <div class="form-group">
+        <label data-i18n="numGuests">人数</label>
+        <div class="visit-counter">
+          <button onclick="changeGuestCount(-1)">−</button>
+          <span class="count" id="guestCount">1</span>
+          <button onclick="changeGuestCount(1)">+</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label data-i18n="source">来店動機</label>
+        <select id="groupSource">
+          <option value="">-- 選択 --</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guest Entries -->
+  <div id="guestContainer"></div>
+
+  <!-- Add Guest Button -->
+  <div style="text-align:center;margin-bottom:16px">
+    <button class="btn btn-outline btn-sm" onclick="addGuest()">
+      + <span data-i18n="addGuest">ゲスト追加</span>
+    </button>
+  </div>
+
+  <!-- Submit -->
+  <button class="btn btn-success" id="submitBtn" onclick="submitData()">
+    <span id="submitText" data-i18n="submit">Google Sheets に送信</span>
+  </button>
+
+  <!-- Recent Submissions -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-title"><span class="icon">📊</span> <span data-i18n="recentEntries">最近の入力</span></div>
+    <div id="historyList">
+      <p style="font-size:13px;color:var(--text-light)" data-i18n="noEntries">まだ入力がありません</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ==================== DATA ====================
+const SOURCES = [
+  'google map', 'Return visit', 'Hotel', 'Friend', 'facebook',
+  'Instagram', 'tiktok', 'signboard', 'web', 'ChatGPT', 'Gemini',
+  'AI', 'HY', 'capichi'
+];
+
+const NATIONALITIES = [
+  { code: 'VN', flag: '🇻🇳' }, { code: 'JP', flag: '🇯🇵' }, { code: 'KR', flag: '🇰🇷' },
+  { code: 'CN', flag: '🇨🇳' }, { code: 'TW', flag: '🇹🇼' }, { code: 'HK', flag: '🇭🇰' },
+  { code: 'SG', flag: '🇸🇬' }, { code: 'TH', flag: '🇹🇭' }, { code: 'MY', flag: '🇲🇾' },
+  { code: 'ID', flag: '🇮🇩' }, { code: 'PH', flag: '🇵🇭' }, { code: 'IN', flag: '🇮🇳' },
+  { code: 'AU', flag: '🇦🇺' }, { code: 'NZ', flag: '🇳🇿' }, { code: 'US', flag: '🇺🇸' },
+  { code: 'CA', flag: '🇨🇦' }, { code: 'GB', flag: '🇬🇧' }, { code: 'FR', flag: '🇫🇷' },
+  { code: 'DE', flag: '🇩🇪' }, { code: 'IT', flag: '🇮🇹' }, { code: 'ES', flag: '🇪🇸' },
+  { code: 'NL', flag: '🇳🇱' }, { code: 'SE', flag: '🇸🇪' }, { code: 'CH', flag: '🇨🇭' },
+  { code: 'AT', flag: '🇦🇹' }, { code: 'DK', flag: '🇩🇰' }, { code: 'NO', flag: '🇳🇴' },
+  { code: 'FI', flag: '🇫🇮' }, { code: 'RU', flag: '🇷🇺' }, { code: 'BR', flag: '🇧🇷' },
+  { code: 'MX', flag: '🇲🇽' }, { code: 'AR', flag: '🇦🇷' }, { code: 'AE', flag: '🇦🇪' },
+  { code: 'SA', flag: '🇸🇦' }, { code: 'IL', flag: '🇮🇱' }, { code: 'TR', flag: '🇹🇷' },
+  { code: 'PL', flag: '🇵🇱' }, { code: 'HR', flag: '🇭🇷' }, { code: 'UZ', flag: '🇺🇿' },
+  { code: 'MM', flag: '🇲🇲' }, { code: 'IS', flag: '🇮🇸' }, { code: 'MC', flag: '🇲🇨' }
+];
+
+const MENU_ITEMS = [
+  { name: 'tai', price: 1800000 },
+  { name: 'maguro', price: 2300000 },
+  { name: 'kaki', price: 2800000 },
+  { name: 'ebi', price: 3500000 },
+  { name: 'uni', price: 3300000 },
+  { name: 'kani', price: 4700000 },
+  { name: 'aoyama', price: 5600000 },
+  { name: 'saiko', price: 7300000 },
+  { name: 'a la carte', price: 1500000 },
+  { name: 'okonomi10', price: 2500000 },
+  { name: 'okonomi14', price: 3000000 },
+  { name: 'okonomi18', price: 3500000 },
+  { name: 'fugu', price: 4600000 },
+  { name: 'wagyu', price: 2900000 },
+  { name: 'kiwami', price: 8600000 },
+  { name: 'kids genki', price: 990000 },
+  { name: 'ankou', price: 17900000 }
+];
+
+// ==================== i18n ====================
+const i18n = {
+  ja: {
+    appTitle: '鮨青山',
+    appSubtitle: 'マーケティングデータ入力',
+    groupInfo: 'グループ情報',
+    date: '日付',
+    time: '時間',
+    numGuests: '人数',
+    source: '来店動機',
+    selectSource: '-- 選択 --',
+    guest: 'ゲスト',
+    nationality: '国籍',
+    visitTimes: '来店回数',
+    name: '名前',
+    age: '年齢',
+    meal: 'コース',
+    voucher: 'バウチャー',
+    yes: 'はい',
+    no: 'いいえ',
+    memo: 'メモ',
+    fiveStars: '5★ レビュー',
+    done: '済',
+    addGuest: 'ゲスト追加',
+    submit: 'Google Sheets に送信',
+    submitting: '送信中...',
+    recentEntries: '最近の入力',
+    noEntries: 'まだ入力がありません',
+    successMsg: '送信しました！',
+    errorMsg: '送信に失敗しました',
+    settingsTitle: 'Google Sheets 設定',
+    settingsHint: 'Google Sheetsにデータを送信するためのURLを設定してください',
+    cancel: 'キャンセル',
+    save: '保存',
+    saved: '設定を保存しました',
+    namePlace: '例: Mr Tanaka',
+    agePlace: '例: 35',
+    memoPlace: 'メモ...',
+    csvExport: 'CSVエクスポート',
+    first: '初回',
+    repeat: 'リピート',
+    regular: '常連',
+    selectNat: '国籍を選択',
+    selectMeal: 'コースを選択',
+  },
+  vi: {
+    appTitle: 'Sushi Aoyama',
+    appSubtitle: 'Nhập dữ liệu Marketing',
+    groupInfo: 'Thông tin nhóm',
+    date: 'Ngày',
+    time: 'Giờ',
+    numGuests: 'Số khách',
+    source: 'Nguồn khách',
+    selectSource: '-- Chọn --',
+    guest: 'Khách',
+    nationality: 'Quốc tịch',
+    visitTimes: 'Lần đến',
+    name: 'Tên',
+    age: 'Tuổi',
+    meal: 'Set menu',
+    voucher: 'Voucher',
+    yes: 'Có',
+    no: 'Không',
+    memo: 'Ghi chú',
+    fiveStars: 'Đánh giá 5★',
+    done: 'Xong',
+    addGuest: 'Thêm khách',
+    submit: 'Gửi lên Google Sheets',
+    submitting: 'Đang gửi...',
+    recentEntries: 'Nhập gần đây',
+    noEntries: 'Chưa có dữ liệu nào',
+    successMsg: 'Gửi thành công!',
+    errorMsg: 'Gửi thất bại',
+    settingsTitle: 'Cài đặt Google Sheets',
+    settingsHint: 'Nhập URL của Google Apps Script để gửi dữ liệu',
+    cancel: 'Hủy',
+    save: 'Lưu',
+    saved: 'Đã lưu cài đặt',
+    namePlace: 'VD: Mr Tanaka',
+    agePlace: 'VD: 35',
+    memoPlace: 'Ghi chú...',
+    csvExport: 'Xuất CSV',
+    first: 'Lần đầu',
+    repeat: 'Quay lại',
+    regular: 'Khách quen',
+    selectNat: 'Chọn quốc tịch',
+    selectMeal: 'Chọn set menu',
+  }
+};
+
+let currentLang = 'ja';
+let guestCount = 1;
+let guests = [];
+let history = [];
+
+// ==================== INIT ====================
+function init() {
+  // Set today's date
+  const today = new Date();
+  document.getElementById('groupDate').value = today.toISOString().split('T')[0];
+
+  // Set current time (rounded to nearest 30 min)
+  const h = today.getHours().toString().padStart(2, '0');
+  const m = (Math.round(today.getMinutes() / 30) * 30 % 60).toString().padStart(2, '0');
+  document.getElementById('groupTime').value = `${h}:${m}`;
+
+  // Populate source dropdown
+  populateSources();
+
+  // Init first guest
+  guests = [createGuestData()];
+  renderGuests();
+
+  // Load settings
+  loadSettings();
+
+  // Load history
+  loadHistory();
+}
+
+function populateSources() {
+  const sel = document.getElementById('groupSource');
+  sel.innerHTML = `<option value="">${t('selectSource')}</option>`;
+  SOURCES.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = s;
+    sel.appendChild(opt);
+  });
+}
+
+function createGuestData() {
+  return {
+    nationality: '',
+    visitTimes: 1,
+    name: '',
+    age: '',
+    meal: '',
+    voucher: '',
+    memo: '',
+    fiveStars: false
+  };
+}
+
+// ==================== LANGUAGE ====================
+function t(key) {
+  return i18n[currentLang][key] || key;
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.includes(lang === 'ja' ? '日本語' : 'Tiếng'));
+  });
+
+  // Update static text
+  document.getElementById('appTitle').textContent = t('appTitle');
+  document.getElementById('appSubtitle').textContent = t('appSubtitle');
+  document.getElementById('settingsTitle').textContent = t('settingsTitle');
+  document.getElementById('settingsHint').textContent = t('settingsHint');
+  document.getElementById('btnSettingsCancel').textContent = t('cancel');
+  document.getElementById('btnSettingsSave').textContent = t('save');
+
+  // Update all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+
+  // Re-render
+  populateSources();
+  renderGuests();
+  renderHistory();
+}
+
+// ==================== GUESTS ====================
+function changeGuestCount(delta) {
+  const newCount = guestCount + delta;
+  if (newCount < 1 || newCount > 20) return;
+  guestCount = newCount;
+  document.getElementById('guestCount').textContent = guestCount;
+
+  while (guests.length < guestCount) guests.push(createGuestData());
+  while (guests.length > guestCount) guests.pop();
+  renderGuests();
+}
+
+function addGuest() {
+  guestCount++;
+  document.getElementById('guestCount').textContent = guestCount;
+  guests.push(createGuestData());
+  renderGuests();
+  // Scroll to new guest
+  setTimeout(() => {
+    const cards = document.querySelectorAll('.guest-card');
+    if (cards.length) cards[cards.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 50);
+}
+
+function removeGuest(index) {
+  if (guests.length <= 1) return;
+  guests.splice(index, 1);
+  guestCount = guests.length;
+  document.getElementById('guestCount').textContent = guestCount;
+  renderGuests();
+}
+
+function renderGuests() {
+  const container = document.getElementById('guestContainer');
+  container.innerHTML = '';
+
+  guests.forEach((guest, i) => {
+    const card = document.createElement('div');
+    card.className = 'guest-card';
+    card.innerHTML = `
+      <div class="guest-header">
+        <span class="guest-number">${t('guest')} ${i + 1}</span>
+        ${guests.length > 1 ? `<button class="btn-remove-guest" onclick="removeGuest(${i})">✕</button>` : ''}
+      </div>
+
+      <!-- Nationality -->
+      <div class="form-group" style="margin-bottom:12px">
+        <label>${t('nationality')}</label>
+        <div class="nat-grid">
+          ${NATIONALITIES.map(n => `
+            <div class="nat-chip ${guest.nationality === n.code ? 'selected' : ''}"
+                 onclick="selectNat(${i}, '${n.code}')">
+              <span class="flag">${n.flag}</span>
+              <span class="code">${n.code}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="form-grid cols-3" style="margin-bottom:12px">
+        <!-- Visit Times -->
+        <div class="form-group">
+          <label>${t('visitTimes')}</label>
+          <div class="visit-counter">
+            <button onclick="changeVisit(${i}, -1)">−</button>
+            <span class="count" id="visit-${i}">${guest.visitTimes}</span>
+            <button onclick="changeVisit(${i}, 1)">+</button>
+          </div>
+        </div>
+        <!-- Name -->
+        <div class="form-group">
+          <label>${t('name')}</label>
+          <input type="text" value="${guest.name}" placeholder="${t('namePlace')}"
+                 onchange="guests[${i}].name=this.value">
+        </div>
+        <!-- Age -->
+        <div class="form-group">
+          <label>${t('age')}</label>
+          <input type="number" value="${guest.age}" placeholder="${t('agePlace')}"
+                 min="0" max="120" onchange="guests[${i}].age=this.value">
+        </div>
+      </div>
+
+      <!-- Meal -->
+      <div class="form-group" style="margin-bottom:12px">
+        <label>${t('meal')}</label>
+        <div class="menu-grid">
+          ${MENU_ITEMS.map(m => `
+            <div class="menu-chip ${guest.meal === m.name ? 'selected' : ''}"
+                 onclick="selectMeal(${i}, '${m.name}')">
+              <span class="name">${m.name}</span>
+              <span class="price">${formatPrice(m.price)}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="form-grid cols-3" style="margin-bottom:12px">
+        <!-- Voucher -->
+        <div class="form-group">
+          <label>${t('voucher')}</label>
+          <div class="toggle-group">
+            <button class="toggle-btn ${guest.voucher === 'Yes' ? 'active-yes' : ''}"
+                    onclick="setVoucher(${i}, 'Yes')">${t('yes')}</button>
+            <button class="toggle-btn ${guest.voucher === 'No' ? 'active-no' : ''}"
+                    onclick="setVoucher(${i}, 'No')">${t('no')}</button>
+          </div>
+        </div>
+        <!-- 5 Stars -->
+        <div class="form-group">
+          <label>${t('fiveStars')}</label>
+          <button class="star-toggle ${guest.fiveStars ? 'active' : ''}"
+                  onclick="toggleStar(${i})">
+            ★ ${t('done')}
+          </button>
+        </div>
+      </div>
+
+      <!-- Memo -->
+      <div class="form-group">
+        <label>${t('memo')}</label>
+        <input type="text" value="${escapeHtml(guest.memo)}" placeholder="${t('memoPlace')}"
+               onchange="guests[${i}].memo=this.value">
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function selectNat(idx, code) {
+  guests[idx].nationality = guests[idx].nationality === code ? '' : code;
+  renderGuests();
+}
+
+function selectMeal(idx, name) {
+  guests[idx].meal = guests[idx].meal === name ? '' : name;
+  renderGuests();
+}
+
+function setVoucher(idx, val) {
+  guests[idx].voucher = guests[idx].voucher === val ? '' : val;
+  renderGuests();
+}
+
+function toggleStar(idx) {
+  guests[idx].fiveStars = !guests[idx].fiveStars;
+  renderGuests();
+}
+
+function changeVisit(idx, delta) {
+  const v = guests[idx].visitTimes + delta;
+  if (v < 1) return;
+  guests[idx].visitTimes = v;
+  document.getElementById(`visit-${idx}`).textContent = v;
+}
+
+// ==================== SUBMIT ====================
+async function submitData() {
+  const date = document.getElementById('groupDate').value;
+  const time = document.getElementById('groupTime').value;
+  const source = document.getElementById('groupSource').value;
+
+  if (!date || !time) {
+    showToast(currentLang === 'ja' ? '日付と時間を入力してください' : 'Vui lòng nhập ngày và giờ', 'error');
+    return;
+  }
+  if (!source) {
+    showToast(currentLang === 'ja' ? '来店動機を選択してください' : 'Vui lòng chọn nguồn khách', 'error');
+    return;
+  }
+
+  // Format date as M/D
+  const d = new Date(date);
+  const dateStr = `${d.getMonth() + 1}/${d.getDate()}`;
+
+  // Build rows matching the sheet structure
+  const rows = [];
+
+  // Group header row
+  rows.push({
+    date: dateStr,
+    time: time.replace(/^0/, ''),
+    number: guestCount,
+    source: source,
+    nationality: '',
+    visitTimes: '',
+    name: '',
+    age: '',
+    meal: '',
+    voucher: '',
+    memo: '',
+    fiveStars: ''
+  });
+
+  // Individual guest rows
+  guests.forEach(g => {
+    rows.push({
+      date: '',
+      time: '',
+      number: '',
+      source: '',
+      nationality: g.nationality,
+      visitTimes: g.visitTimes,
+      name: g.name,
+      age: g.age,
+      meal: g.meal,
+      voucher: g.voucher,
+      memo: g.memo,
+      fiveStars: g.fiveStars ? 'Done' : ''
+    });
+  });
+
+  const btn = document.getElementById('submitBtn');
+  const submitText = document.getElementById('submitText');
+  btn.disabled = true;
+  submitText.innerHTML = `<span class="spinner"></span> ${t('submitting')}`;
+
+  const scriptUrl = getScriptUrl();
+
+  if (scriptUrl) {
+    try {
+      const payload = JSON.stringify({ rows, sheetId: getSheetId() });
+
+      // Google Apps Script: text/plain avoids CORS preflight
+      const resp = await fetch(scriptUrl, {
+        method: 'POST',
+        body: payload,
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        redirect: 'follow'
+      });
+
+      if (resp.ok) {
+        const result = await resp.json();
+        if (result.success) {
+          showToast(t('successMsg'), 'success');
+          addToHistory(dateStr, time, source, guestCount);
+          resetForm();
+        } else {
+          showToast(t('errorMsg') + ': ' + (result.error || 'Unknown'), 'error');
+        }
+      } else {
+        showToast(t('errorMsg') + ' (HTTP ' + resp.status + ')', 'error');
+      }
+    } catch (err) {
+      // Network error - still try CSV fallback
+      showToast(t('errorMsg') + ': ' + err.message, 'error');
+      if (confirm(currentLang === 'ja'
+        ? 'Google Sheetsへの送信に失敗しました。代わりにCSVをダウンロードしますか？'
+        : 'Gửi Google Sheets thất bại. Tải CSV thay thế?')) {
+        downloadCSV(rows);
+        addToHistory(dateStr, time, source, guestCount);
+        resetForm();
+      }
+    }
+  } else {
+    // No script URL configured - CSV download
+    downloadCSV(rows);
+    showToast(currentLang === 'ja'
+      ? 'CSVをダウンロードしました（⚙からGoogle Sheets URLを設定すると直接送信できます）'
+      : 'Đã tải CSV (Cài URL Google Sheets trong ⚙ để gửi trực tiếp)', 'success');
+    addToHistory(dateStr, time, source, guestCount);
+    resetForm();
+  }
+
+  btn.disabled = false;
+  submitText.textContent = t('submit');
+}
+
+function downloadCSV(rows) {
+  const headers = ['date', 'Time', 'number', 'soures', 'nationality', 'visit times', 'Name', 'How old', 'meal', 'voucher', 'memo', '5Stars'];
+  const csvRows = [headers.join(',')];
+  rows.forEach(r => {
+    csvRows.push([
+      r.date, r.time, r.number, r.source,
+      r.nationality, r.visitTimes, `"${r.name}"`,
+      r.age, r.meal, r.voucher, `"${r.memo}"`, r.fiveStars
+    ].join(','));
+  });
+
+  const blob = new Blob(['﻿' + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `sushi-aoyama-${document.getElementById('groupDate').value}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function resetForm() {
+  guestCount = 1;
+  document.getElementById('guestCount').textContent = 1;
+  guests = [createGuestData()];
+  document.getElementById('groupSource').value = '';
+
+  // Set new time
+  const now = new Date();
+  const h = now.getHours().toString().padStart(2, '0');
+  const m = (Math.round(now.getMinutes() / 30) * 30 % 60).toString().padStart(2, '0');
+  document.getElementById('groupTime').value = `${h}:${m}`;
+
+  renderGuests();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ==================== HISTORY ====================
+function addToHistory(date, time, source, count) {
+  const entry = { date, time, source, count, timestamp: new Date().toISOString() };
+  history.unshift(entry);
+  if (history.length > 20) history.pop();
+  try { localStorage.setItem('entryHistory', JSON.stringify(history)); } catch(e) {}
+  renderHistory();
+}
+
+function loadHistory() {
+  try {
+    history = JSON.parse(localStorage.getItem('entryHistory') || '[]');
+  } catch(e) { history = []; }
+  renderHistory();
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (history.length === 0) {
+    list.innerHTML = `<p style="font-size:13px;color:var(--text-light)">${t('noEntries')}</p>`;
+    return;
+  }
+  list.innerHTML = history.slice(0, 10).map(h => `
+    <div class="history-item">
+      <div>
+        <strong>${h.date}</strong> ${h.time} — ${h.source}
+        <span style="color:var(--accent);font-weight:600">(${h.count}名)</span>
+      </div>
+      <div class="time">${new Date(h.timestamp).toLocaleTimeString()}</div>
+    </div>
+  `).join('');
+}
+
+// ==================== SETTINGS ====================
+function toggleSettings() {
+  document.getElementById('settingsPanel').classList.toggle('show');
+  document.getElementById('testResult').style.display = 'none';
+}
+
+function saveSettings() {
+  const url = document.getElementById('scriptUrl').value.trim();
+  const id = document.getElementById('sheetId').value.trim();
+  try {
+    localStorage.setItem('scriptUrl', url);
+    localStorage.setItem('sheetId', id);
+  } catch(e) {}
+  toggleSettings();
+  showToast(t('saved'), 'success');
+}
+
+function loadSettings() {
+  try {
+    document.getElementById('scriptUrl').value = localStorage.getItem('scriptUrl') || '';
+    document.getElementById('sheetId').value = localStorage.getItem('sheetId') || '1Vr17Rmok8U0FE-GqCd6v54DVegb7wd8asWlHBDQ5ezQ';
+  } catch(e) {}
+}
+
+function getScriptUrl() {
+  try { return localStorage.getItem('scriptUrl') || ''; } catch(e) { return ''; }
+}
+
+function getSheetId() {
+  try { return localStorage.getItem('sheetId') || SPREADSHEET_ID_DEFAULT; } catch(e) { return SPREADSHEET_ID_DEFAULT; }
+}
+
+const SPREADSHEET_ID_DEFAULT = '1Vr17Rmok8U0FE-GqCd6v54DVegb7wd8asWlHBDQ5ezQ';
+
+async function testConnection() {
+  const url = document.getElementById('scriptUrl').value.trim();
+  const resultEl = document.getElementById('testResult');
+  resultEl.style.display = 'block';
+
+  if (!url) {
+    resultEl.innerHTML = '<span style="color:var(--danger)">URLが入力されていません</span>';
+    return;
+  }
+
+  resultEl.innerHTML = '<span style="color:var(--text-light)">接続テスト中...</span>';
+
+  try {
+    const resp = await fetch(url + '?test=1', { redirect: 'follow' });
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data.success) {
+        resultEl.innerHTML = `<span style="color:var(--success)">✓ 接続成功！</span><br>
+          <span style="color:var(--text-light)">シート: ${data.sheetName || '?'} / 行数: ${data.totalRows || '?'}</span>`;
+      } else {
+        resultEl.innerHTML = `<span style="color:var(--danger)">✕ エラー: ${data.error}</span>`;
+      }
+    } else {
+      resultEl.innerHTML = `<span style="color:var(--danger)">✕ HTTP ${resp.status}</span>`;
+    }
+  } catch (err) {
+    resultEl.innerHTML = `<span style="color:var(--danger)">✕ 接続失敗: ${err.message}</span>`;
+  }
+}
+
+// ==================== UTILS ====================
+function formatPrice(vnd) {
+  if (vnd >= 1000000) return (vnd / 1000000).toFixed(1).replace('.0', '') + 'M';
+  return (vnd / 1000).toFixed(0) + 'K';
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg, type = '') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast show ' + type;
+  setTimeout(() => toast.className = 'toast', 3000);
+}
+
+// ==================== START ====================
+init();
+</script>
+</body>
+</html>
